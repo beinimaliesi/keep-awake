@@ -69,16 +69,16 @@ public:
         item.button.title = @"keep-awake";
 
         NSMenu* menu = [[NSMenu alloc] init];
-        [self buildMenuItem:menu title:@"Until stopped" tag:kTagIndefinite];
-        [self buildMenuItem:menu title:@"15 minutes" tag:kTag15];
-        [self buildMenuItem:menu title:@"30 minutes" tag:kTag30];
-        [self buildMenuItem:menu title:@"1 hour" tag:kTag60];
-        [self buildMenuItem:menu title:@"2 hours" tag:kTag120];
+        buildMenuItem(menu, @"Until stopped", kTagIndefinite);
+        buildMenuItem(menu, @"15 minutes", kTag15);
+        buildMenuItem(menu, @"30 minutes", kTag30);
+        buildMenuItem(menu, @"1 hour", kTag60);
+        buildMenuItem(menu, @"2 hours", kTag120);
         [menu addItem:[NSMenuItem separatorItem]];
-        [self buildMenuItem:menu title:@"Pause / Resume" tag:kTagTogglePause];
-        [self buildMenuItem:menu title:@"Follow daily window" tag:kTagFollowWindow];
+        buildMenuItem(menu, @"Pause / Resume", kTagTogglePause);
+        buildMenuItem(menu, @"Follow daily window", kTagFollowWindow);
         [menu addItem:[NSMenuItem separatorItem]];
-        [self buildMenuItem:menu title:@"Quit" tag:kTagQuit];
+        buildMenuItem(menu, @"Quit", kTagQuit);
 
         item.menu = menu;
 
@@ -112,8 +112,6 @@ private:
 
     KeepAwakeTrayDelegate* delegate_ = nullptr;
 };
-
-} // namespace
 
 std::unique_ptr<TrayManager> make_tray_manager(bool has_daily_window) {
     return std::make_unique<MacTrayManager>(has_daily_window);
