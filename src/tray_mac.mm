@@ -1,14 +1,16 @@
 #include "tray_manager.hpp"
 
-// macOS 托盘占位实现：NSStatusItem + 菜单。
+// macOS 托盘实现：NSStatusItem + 菜单。
 // 注意：本文件未在 macOS 环境验证，交由 CI 的 macos-latest runner 编译校验。
 // 简化约定：不启用 ARC，一次性创建的对象在进程生命周期内常驻（轻微泄漏可接受）。
 #import <Cocoa/Cocoa.h>
 
-namespace keep_awake {
+// Objective-C 的 @interface/@implementation 必须位于全局作用域，
+// 不能放进 C++ namespace，故相关声明移出 keep_awake 命名空间。
 namespace {
 
-static TrayCallbacks g_callbacks;
+// 全局回调存储（macOS 托盘由单一实例使用）
+keep_awake::TrayCallbacks g_callbacks;
 
 // 菜单项 tag → TrayCommand 的映射
 enum : NSInteger {
@@ -22,6 +24,8 @@ enum : NSInteger {
     kTagQuit = 8,
 };
 
+} // namespace
+
 @interface KeepAwakeTrayDelegate : NSObject {
 @public
     NSStatusItem* statusItem;
@@ -32,25 +36,27 @@ enum : NSInteger {
 @implementation KeepAwakeTrayDelegate
 - (void)menuAction:(id)sender {
     NSInteger tag = [(NSMenuItem*)sender tag];
-    TrayCommand cmd;
+    keep_awake::TrayCommand cmd;
     switch (tag) {
-        case kTagIndefinite: cmd = TrayCommand::ActivateIndefinite; break;
-        case kTag15: cmd = TrayCommand::ActivateFor15; break;
-        case kTag30: cmd = TrayCommand::ActivateFor30; break;
-        case kTag60: cmd = TrayCommand::ActivateFor60; break;
-        case kTag120: cmd = TrayCommand::ActivateFor120; break;
-        case kTagTogglePause: cmd = TrayCommand::TogglePause; break;
-        case kTagFollowWindow: cmd = TrayCommand::FollowWindow; break;
-        case kTagQuit: cmd = TrayCommand::Quit; break;
+        case kTagIndefinite: cmd = keep_awake::TrayCommand::ActivateIndefinite; break;
+        case kTag15: cmd = keep_awake::TrayCommand::ActivateFor15; break;
+        case kTag30: cmd = keep_awake::TrayCommand::ActivateFor30; break;
+        case kTag60: cmd = keep_awake::TrayCommand::ActivateFor60; break;
+        case kTag120: cmd = keep_awake::TrayCommand::ActivateFor120; break;
+        case kTagTogglePause: cmd = keep_awake::TrayCommand::TogglePause; break;
+        case kTagFollowWindow: cmd = keep_awake::TrayCommand::FollowWindow; break;
+        case kTagQuit: cmd = keep_awake::TrayCommand::Quit; break;
         default: return;
     }
     if (g_callbacks.on_command) g_callbacks.on_command(cmd);
 }
 @end
 
+namespace keep_awake {
+
 class MacTrayManager final : public TrayManager {
 public:
-    explicit MacTrayManager(bool has_daily_window) : has_daily_window_(has_daily_window) {}
+    explicit MacTrayManager(bool /*has_daily_window*/) {}
 
     bool start(const TrayCallbacks& callbacks) override {
         g_callbacks = callbacks;
@@ -105,7 +111,6 @@ private:
     }
 
     KeepAwakeTrayDelegate* delegate_ = nullptr;
-    bool has_daily_window_ = false;
 };
 
 } // namespace
