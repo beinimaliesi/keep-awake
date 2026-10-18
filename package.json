@@ -1,0 +1,13 @@
+{
+  "name": "keepawake-assets",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "将 assets/keep-awake-icon-design.svg 母版渲染为多尺寸 tray.ico",
+  "scripts": {
+    "icon": "node assets/render_icon.mjs"
+  },
+  "dependencies": {
+    "@resvg/resvg-js": "^2.6.2"
+  }
+}

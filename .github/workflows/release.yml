@@ -1,0 +1,65 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.artifact }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            binary_path: build/Release/keep-awake.exe
+            artifact: keep-awake-windows-x86_64.exe
+          - os: macos-13
+            binary_path: build/keep-awake
+            artifact: keep-awake-macos-x86_64
+          - os: macos-14
+            binary_path: build/keep-awake
+            artifact: keep-awake-macos-arm64
+          - os: ubuntu-latest
+            binary_path: build/keep-awake
+            artifact: keep-awake-linux-x86_64
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Stage binary
+        shell: bash
+        run: cp "${{ matrix.binary_path }}" "${{ matrix.artifact }}"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: keep-awake-*
+          generate_release_notes: true

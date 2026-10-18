@@ -1,0 +1,4 @@
+// 由 CMake configure_file 生成：@KEEP_AWAKE_ICON@ 替换为 assets/tray.ico 的绝对路径。
+#include "@KEEP_AWAKE_RESOURCE_H@"
+
+IDI_TRAY ICON "@KEEP_AWAKE_ICON@"

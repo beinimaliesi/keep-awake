@@ -1,0 +1,42 @@
+name: build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Smoke test (--version / --help)
+        shell: bash
+        run: |
+          if [ -f build/Release/keep-awake.exe ]; then
+            build/Release/keep-awake.exe --version
+            build/Release/keep-awake.exe --help
+          else
+            build/keep-awake --version
+            build/keep-awake --help
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: keep-awake-${{ matrix.os }}
+          if-no-files-found: warn
+          path: |
+            build/Release/keep-awake.exe
+            build/keep-awake

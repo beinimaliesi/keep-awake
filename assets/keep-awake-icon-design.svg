@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="42%" r="72%">
+      <stop offset="0%" stop-color="#4A2C1A"/>
+      <stop offset="55%" stop-color="#2E1A0D"/>
+      <stop offset="100%" stop-color="#160B04"/>
+    </radialGradient>
+
+    <linearGradient id="cupGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F8EBD7"/>
+      <stop offset="100%" stop-color="#D6B88E"/>
+    </linearGradient>
+
+    <radialGradient id="coffeeGrad" cx="50%" cy="42%" r="65%">
+      <stop offset="0%" stop-color="#6E4426"/>
+      <stop offset="100%" stop-color="#2A1507"/>
+    </radialGradient>
+
+    <linearGradient id="cupHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.4"/>
+      <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+
+    <filter id="softBlur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+  </defs>
+
+  <rect width="1024" height="1024" rx="224" fill="url(#bgGrad)"/>
+
+  <g transform="translate(512, 560) scale(1.18)">
+
+    <ellipse cx="0" cy="178" rx="150" ry="20" fill="#000000" opacity="0.4" filter="url(#softBlur)"/>
+
+    <ellipse cx="0" cy="155" rx="145" ry="19" fill="#E6D0AA"/>
+    <ellipse cx="0" cy="152" rx="145" ry="19" fill="none" stroke="#A8845A" stroke-width="2" opacity="0.35"/>
+    <ellipse cx="0" cy="153" rx="95" ry="11" fill="#CDAF82" opacity="0.5"/>
+
+    <path d="M -100 -90
+             L -82 90
+             Q -80 112 -58 112
+             L 58 112
+             Q 80 112 82 90
+             L 100 -90 Z"
+          fill="url(#cupGrad)"/>
+
+    <path d="M -88 -78 L -76 80 Q -75 100 -60 100 L -52 100 Q -65 100 -66 80 L -78 -78 Z"
+          fill="url(#cupHighlight)" opacity="0.55"/>
+
+    <ellipse cx="0" cy="-90" rx="100" ry="19" fill="#F8EBD7"/>
+    <ellipse cx="0" cy="-90" rx="86" ry="15" fill="url(#coffeeGrad)"/>
+    <ellipse cx="-24" cy="-95" rx="20" ry="3.5" fill="#8B5E3C" opacity="0.55"/>
+
+    <path d="M 82 -50
+             C 140 -50 140 20 82 20"
+          fill="none" stroke="#E6D0AA" stroke-width="15" stroke-linecap="round"/>
+    <path d="M 82 -50
+             C 140 -50 140 20 82 20"
+          fill="none" stroke="url(#cupGrad)" stroke-width="11" stroke-linecap="round"/>
+
+    <path d="M -26 -128
+             C -46 -158 -10 -178 -30 -208
+             C -50 -238 -14 -258 -28 -288"
+          fill="none" stroke="#F8EBD7" stroke-width="8" stroke-linecap="round" opacity="0.7"/>
+
+    <path d="M 26 -128
+             C 46 -158 10 -183 30 -213
+             C 50 -243 16 -263 28 -293"
+          fill="none" stroke="#F8EBD7" stroke-width="8" stroke-linecap="round" opacity="0.45"/>
+  </g>
+</svg>
